@@ -12,14 +12,13 @@ public class StudentService {
     @Autowired
     private StudentRepository repository;
     public Optional<Student> createStudent(Student newStudent){
-        Optional<List<Student>> studentListOpt = getByNameSurname(newStudent.getName(),newStudent.getSurname());
-        if(studentListOpt.isPresent()){
-            if(studentListOpt.get().isEmpty()){
+        List<Student> studentList = getByNameSurname(newStudent.getName(),newStudent.getSurname());
+            if(studentList.isEmpty()){
                 Student savedStudent = repository.save(newStudent);
                 return Optional.of(savedStudent);
+        }else {
+                return Optional.empty();
             }
-        }
-        return Optional.empty();
     }
     public List<Student> getAllStudents(){
         return repository.findAll();
@@ -47,12 +46,8 @@ public class StudentService {
             return Optional.empty();
         }
     }
-    public Optional<List<Student>> getByNameSurname(String name,String surname){
-        Optional<List<Student>> studentEntityOptional = repository.findByNameSurname(name,surname);
-        if(studentEntityOptional.isPresent()){
-            return studentEntityOptional;
-        }else {
-            return Optional.empty();
-        }
+    public List<Student> getByNameSurname(String name,String surname){
+        List<Student> studentList = repository.findByNameSurname(name,surname);
+        return studentList;
     }
 }
